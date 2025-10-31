@@ -1,1 +1,52 @@
-# aos
+
+Q1
+//Take multiple file as cmdline arguments and print file types and inode numbers
+
+#include <stdio.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+
+void main(int argc, char *argv[])
+{
+  struct stat buf;
+  int n=argc; //find number of arguments
+  printf("\nNumber of file:%d",n);
+  for(int i=1;i<n;i++)
+  {
+    stat(argv[i],&buf); //get info of ith argument file
+    printf("\nFile name:%s\tInode no.:%ld",argv[i],buf.st_ino);
+    printf("\n");
+  }
+}
+
+
+Q2
+
+//Send SIGALARM Signal by child process to parent process
+//parent process catch signal
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+void sigfunc()//func executed when alarm sig occur
+{
+  printf("\nAlarm signal received..");
+}
+void main()
+{
+  printf("\n Parent process started..");
+  
+  int pid=fork();//create child process
+  
+  if(pid!=0)//parent process
+  { signal(SIGALRM,sigfunc);
+    printf("\nParent process paused..");
+    pause(); 
+  }
+  
+  else //child process
+  { sleep(5);
+    kill(getppid(),SIGALRM); //Send Alaram signal to parent process
+     
+  }
+  
+}
