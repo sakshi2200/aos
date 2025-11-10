@@ -1,1 +1,56 @@
 
+Q1
+
+// C program to get and set resource limit for the process
+
+#include <stdio.h>
+#include <sys/resource.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+int main() {
+
+	struct rlimit old_lim, lim, new_lim;
+	// getting old limits
+	 getrlimit(RLIMIT_NOFILE, &old_lim);
+         printf("Old limits -> soft limit= %ld \t"
+			" hard limit= %ld \n", old_lim.rlim_cur,old_lim.rlim_max);
+
+	// setting new value
+	lim.rlim_cur = 3;
+	lim.rlim_max = 1024;
+	// setting limits
+	setrlimit(RLIMIT_NOFILE, &lim);
+	
+	// getting new limits
+	getrlimit(RLIMIT_NOFILE, &new_lim);
+	printf("New limits -> soft limit= %ld "
+	 	"\t hard limit= %ld \n", new_lim.rlim_cur,new_lim.rlim_max);
+	
+	return 0;
+}
+
+
+Q2
+
+//Program to demonstrates redirection of standard output to file output.txt
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+void main()
+{ char buf[]="This text to write in file output.txt";
+  
+  int fd=creat("output.txt",0777); //create a file with all permissions
+  close(1); //close standard output
+  dup(fd);//fd duplicated at standard output
+  write(1,buf,strlen(buf)); //text written on stdout goes file
+  close(fd);
+  
+}
