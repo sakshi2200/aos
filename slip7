@@ -1,1 +1,50 @@
+Q1
 
+//Program to demonstrates redirection of standard output to file
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+void main()
+{ char buf[]="This text to write in file..";
+  
+  int fd=creat("test",0777);
+  close(1); //close standard output
+  dup(fd);//fd duplicated at standard output
+  write(1,buf,strlen(buf)); //text written on stdout goes file
+  close(fd);
+  
+}
+
+
+Q2
+
+//Program to implement following linux command using fork,pipe and exec system calls
+//ls -l|wc -l
+
+#include<stdio.h>
+#include<unistd.h>
+int main()
+{
+    int fd[2],dupFd;
+    char *filename1 ="ls";
+    char *filename2 ="wc";
+    char *arg1 = "-l";
+    pipe(fd);
+    if(fork()!=0)// return 0 for child process and 1 for parent process
+    {
+        close(1); // 1 for closing stdout
+        dup(fd[1]);
+        close(fd[0]);
+        execlp(filename1,filename1,arg1,NULL);
+    }
+    else
+    {
+        close(0); //0 for closing stdin
+        dup(fd[0]);
+        close(fd[1]);
+        execlp(filename2,filename2,arg1,NULL);
+    } 
+}
