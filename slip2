@@ -1,3 +1,5 @@
+q1
+
 //Properties of file using stat function. 
 //display statistics of file whose name
 //is passed thru command line argument
@@ -28,7 +30,7 @@ void main(int argc, char *argv[])
 
 
 
-
+q2
 
 //Catches Ctrl-C (SIGINT) signal for the first time
 //Display appropriate message and terminates on Ctrl-C (SIGINT) again
