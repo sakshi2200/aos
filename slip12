@@ -1,1 +1,68 @@
+Q1
 
+//Print exit status of terminated child by parent process
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/wait.h>
+void main()
+{
+  int i,ret;
+  
+  for(i=0;i<5;i++)
+  {
+    if(fork()==0)
+    { printf("Child %d created\n",i);
+      exit(i);
+    }
+    else//parent
+    { printf("Parent is waiting till termination of child..\n");
+      wait(&ret);
+      printf("Parent terminated due to death of child returned value %d\n",ret);
+    }
+  }
+  
+}
+
+
+Q2
+
+ //program which receives file names as command line arguments and display those
+//filenames in ascending order according to their sizes. I) (e.g $ a.out a.txt b.txt c.txt, …)
+
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/stat.h>
+
+struct fileinfo
+{
+  char fname[20];
+  int size;
+ };
+void main(int argc, char *argv[])
+{ struct fileinfo flist[10],temp;
+  struct stat stbuf;
+  int n=0;
+  for(int i=1;i<argc;i++)
+   { stat(argv[i],&stbuf);
+     strcpy(flist[n].fname,argv[i]);
+     flist[n].size=stbuf.st_size;
+     //printf("%s\t%d\n",flist[n].fname,flist[n].size);
+     n++;
+   }
+   
+   //sort list of files on size
+   for(int i=0;i<n;i++)
+   { for(int j=i;j<n;j++)
+      if(flist[i].size>flist[j].size)
+      { temp=flist[i];
+        flist[i]=flist[j];
+        flist[j]=temp;
+      }
+   }
+   //print all file names and size
+   for(int i=0;i<n;i++)
+     printf("%s\t%d\n",flist[i].fname,flist[i].size);
+}
