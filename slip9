@@ -1,1 +1,60 @@
+Q1
 
+//Prograam to create unnamed pipe.
+//Read and write operations on it
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+void main()
+{
+  char buf[1024]="hello";
+  int fds[2];
+  pipe(fds);
+  for(;;)
+  { 
+    write(fds[1],buf,6);  
+    read(fds[0],buf,6); 
+    printf("%s\t",buf); 
+  }
+}
+
+
+Q2
+
+//Program to verify type of files which are passed thru command line arguments
+//File is directory, character, device file
+//Also find access persmissions
+
+#include <stdio.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+void main(int argc, char *argv[])
+{ struct stat buf;
+  int i;
+  for(i=1;i<argc;i++)
+ {
+   stat(argv[i],&buf);
+   if(S_ISREG(buf.st_mode))
+    printf("\n%s is Regular\n",argv[i]);
+   else
+   if(S_ISDIR(buf.st_mode))
+    printf("\n%s is Directory\n",argv[i]);
+   else
+   if(S_ISFIFO(buf.st_mode))
+    printf("\n%s is FIFO type of file\n",argv[i]);
+   else
+    printf("\n%s is other type of file\n",argv[i]);
+
+   if(buf.st_mode & S_IROTH)
+    printf("Other user has read permisson\n");
+   else
+    printf("Other user has no read permisson\n");
+
+   if(buf.st_mode&S_IWOTH)
+    printf("\nOther user has write permission\n");
+   else
+        printf("\nOther user has not write permission\n");
+  }
+} 
