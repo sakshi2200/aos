@@ -1,1 +1,66 @@
 
+Q1
+//program to read current directory
+//display name of files and number of files in current directory
+
+#include <stdio.h>
+#include <dirent.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <string.h>
+
+void main()
+{
+  DIR *dp;
+  struct dirent *dent;
+  int count=0;
+  dp=opendir(".");
+  if(dp==NULL)
+  { printf("directory couldnt open..\n");
+    exit(0);
+  }
+ while(1)
+ {
+  dent=readdir(dp);
+  if(dent==NULL) break;
+  printf("%s\n",dent->d_name);
+  count++; 
+ }
+ 
+ closedir(dp);
+ printf("\n No.of files %d\n",count);
+
+}//main
+
+
+Q2
+
+//Create unnamed pipe. Child process write messages to pipe and parent read and display them
+
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+void main()
+{
+  char msg1[]="Hello World!";
+  char msg2[]="Hello SPPU!";
+  char msg3[]="Linux is Funny!";
+  char buf[20];
+  int fds[2];
+  pipe(fds);
+  int pid=fork();
+  
+  if(pid==0)//child
+    {
+     write(fds[1],msg1,strlen(msg1)); sleep(1);
+     write(fds[1],msg2,strlen(msg2)); sleep(1);
+     write(fds[1],msg3,strlen(msg3)); sleep(1);
+    }
+    else//parent
+    { 
+     while(read(fds[0],buf,20)!=-1)
+     printf("%s\n",buf);
+    }
+  
+}
