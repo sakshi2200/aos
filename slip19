@@ -1,1 +1,52 @@
+q1
 
+//Take multiple file as cmdline arguments and print file types and inode numbers
+
+#include <stdio.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+
+void main(int argc, char *argv[])
+{
+  struct stat buf;
+  int n=argc; //find number of arguments
+  printf("\nNumber of file:%d",n);
+  for(int i=1;i<n;i++)
+  {
+    stat(argv[i],&buf); //get info of ith argument file
+    printf("\nFile name:%s\tInode no.:%ld",argv[i],buf.st_ino);
+    printf("\n");
+  }
+}
+
+
+
+q2
+
+//Program to implement following linux command using fork,pipe and exec system calls
+//ls -l|wc -l
+
+#include<stdio.h>
+#include<unistd.h>
+int main()
+{
+    int fd[2],dupFd;
+    char *filename1 ="ls";
+    char *filename2 ="wc";
+    char *arg1 = "-l";
+    pipe(fd);
+    if(fork()!=0)// return 0 for child process and 1 for parent process
+    {
+        close(1); // 1 for closing stdout
+        dup(fd[1]);
+        close(fd[0]);
+        execlp(filename1,filename1,arg1,NULL);
+    }
+    else
+    {
+        close(0); //0 for closing stdin
+        dup(fd[0]);
+        close(fd[1]);
+        execlp(filename2,filename2,arg1,NULL);
+    } 
+}
