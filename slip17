@@ -1,1 +1,32 @@
+Q1
+//program to read current directory
+//display name of files and number of files in current directory
 
+#include <stdio.h>
+#include <dirent.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <string.h>
+
+void main()
+{
+  DIR *dp;
+  struct dirent *dent;
+  int count=0;
+  dp=opendir(".");
+  if(dp==NULL)
+  { printf("directory couldnt open..\n");
+    exit(0);
+  }
+ while(1)
+ {
+  dent=readdir(dp);
+  if(dent==NULL) break;
+  printf("%s\n",dent->d_name);
+  count++; 
+ }
+ 
+ closedir(dp);
+ printf("\n No.of files %d\n",count);
+
+}//main
