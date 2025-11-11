@@ -1,1 +1,19 @@
 
+q2
+//Program to demonstrates redirection of standard output to file output.txt
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+void main()
+{ char buf[]="This text to write in file output.txt";
+  
+  int fd=creat("output.txt",0777); //create a file with all permissions
+  close(1); //close standard output
+  dup(fd);//fd duplicated at standard output
+  write(1,buf,strlen(buf)); //text written on stdout goes file
+  close(fd);
+  
+}
