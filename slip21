@@ -1,1 +1,96 @@
 
+q1
+//program to read current directory
+//display name of files and number of files in current directory
+
+#include <stdio.h>
+#include <dirent.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <string.h>
+
+void main()
+{
+  DIR *dp;
+  struct dirent *dent;
+  int count=0;
+  dp=opendir(".");
+  if(dp==NULL)
+  { printf("directory couldnt open..\n");
+    exit(0);
+  }
+ while(1)
+ {
+  dent=readdir(dp);
+  if(dent==NULL) break;
+  printf("%s\n",dent->d_name);
+  count++; 
+ }
+ 
+ closedir(dp);
+ printf("\n No.of files %d\n",count);
+
+}//main
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+q2
+//Receive file name as command line argument
+//ascending order
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <string.h>
+// Structure to hold file name and size
+struct FileInfo {
+char name[256];
+off_t size;
+};
+
+// Function to compare sizes for qsort
+int compare(const void *a, const void *b) {
+struct FileInfo *file1 = (struct FileInfo *)a;
+struct FileInfo *file2 = (struct FileInfo *)b;
+if (file1->size > file2->size) return 1;
+else if (file1->size < file2->size) return -1;
+else return 0;
+}
+int main(int argc, char *argv[]) {
+if (argc < 2) {
+printf("Usage: %s <file1> <file2> ...\n", argv[0]);
+return 1;
+}
+int n = argc - 1;
+struct FileInfo files[n];
+for (int i = 1; i < argc; i++) {
+struct stat st;
+if (stat(argv[i], &st) == 0) {
+strcpy(files[i-1].name, argv[i]);
+files[i-1].size = st.st_size;
+} else {
+perror("stat failed");
+return 1;
+}
+}
+// Sort files by size
+qsort(files, n, sizeof(struct FileInfo), compare);
+printf("Files in ascending order of size:\n");
+for (int i = 0; i < n; i++) {
+printf("%s (%ld bytes)\n", files[i].name, (long)files[i].size);
+}
+
+return 0;
+}
