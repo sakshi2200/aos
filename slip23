@@ -1,3 +1,48 @@
+q1
+#include <stdio.h> 
+#include <dirent.h> 
+#include <string.h> 
+ 
+int main()
+ { 
+    char filename[100];  
+   DIR *dir;   
+  struct dirent *entry; 
+    int found = 0; 
+ 
+    printf("Enter the filename to search: ");   
+  scanf("%s", filename); 
+ 
+    dir = opendir(".");  
+   if (dir == NULL)
+ {    
+     perror("opendir"); 
+        return 1; 
+    } 
+ 
+    while ((entry = readdir(dir)) != NULL)
+ {     
+    if (strcmp(entry->d_name, filename) == 0) 
+{      
+       found = 1;       
+      break; 
+        } 
+    } 
+ 
+    closedir(dir); 
+ 
+    if (found) 
+        printf("File '%s' found in current directory.\n", filename);  
+   else 
+        printf("File '%s' not found in current directory.\n", filename); 
+ 
+    return 0; 
+}
+
+
+
+
+
 
 q2
 //identify the type using stat()
