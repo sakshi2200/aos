@@ -1,3 +1,35 @@
+q1
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <unistd.h> 
+#include <signal.h> 
+ 
+void handle_sigusr1(int sig)
+ { 
+    printf("Process resumed\n"); 
+} 
+ 
+void handle_sigusr2(int sig) 
+{   
+  printf("Process suspended\n"); 
+    pause(); 
+} 
+ 
+int main()
+ {    
+ signal(SIGUSR1, handle_sigusr1);  
+   signal(SIGUSR2, handle_sigusr2); 
+ 
+    while (1) { 
+        printf("Running...\n"); 
+        sleep(2); 
+    } 
+ 
+    return 0; 
+}
+
+
+
 q2
 //identify the type using stat()
 
